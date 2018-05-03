@@ -128,6 +128,49 @@ def to_batch_query(sql_data, idxes, st, ed):
         table_ids.append(sql_data[idxes[i]]['table_id'])
     return query_gt, table_ids
 
+def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data):
+#     engine = DBEngine(db_path)
+    
+    print("\n\n",sql_data, len(sql_data))
+    model.eval()
+    perm = list(range(len(sql_data)))
+    tot_acc_num = 0.0
+    acc_of_log = 0.0
+    st = 0
+    while st < len(sql_data):
+        ed = st+batch_size if st+batch_size < len(perm) else len(perm)
+        q_seq, col_seq, col_num, ans_seq, query_seq, gt_cond_seq, raw_data = \
+            to_batch_seq(sql_data, table_data, perm, st, ed, ret_vis_data=True)
+        raw_q_seq = [x[0] for x in raw_data]
+        raw_col_seq = [x[1] for x in raw_data]
+        gt_where_seq = model.generate_gt_where_seq(q_seq, col_seq, query_seq)
+        query_gt, table_ids = to_batch_query(sql_data, perm, st, ed)
+        gt_sel_seq = [x[1] for x in ans_seq]
+        score = model.forward(q_seq, col_seq, col_num,
+                (True, True, True), gt_sel=gt_sel_seq)
+        pred_queries = model.gen_query(score, q_seq, col_seq,
+                raw_q_seq, raw_col_seq, (True, True, True))
+                
+        print(pred_queries)
+        
+        for idx, (sql_gt, sql_pred, tid) in enumerate(
+                zip(query_gt, pred_queries, table_ids)):
+            ret_gt = engine.execute(tid,
+                    sql_gt['sel'], sql_gt['agg'], sql_gt['conds'])
+            try:
+                ret_pred = engine.execute(tid,
+                        sql_pred['sel'], sql_pred['agg'], sql_pred['conds'])
+                #print('select prediction ---> ', sql_pred['sel'])
+                #print('agg prediction ---> ', sql_pred['agg'])
+                #print('conds prediction ---> ', sql_pred['conds'])
+            except:
+                ret_pred = None
+            tot_acc_num += (ret_gt == ret_pred)
+        
+        st = ed
+
+    return tot_acc_num / len(sql_data)
+
 def epoch_train(model, optimizer, batch_size, sql_data, table_data, pred_entry):
     model.train()
     perm=np.random.permutation(len(sql_data))
