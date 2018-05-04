@@ -114,12 +114,6 @@ if __name__ == '__main__':
         print("Loading from %s"%cond_m)
         model.cond_pred.load_state_dict(torch.load(cond_m))
 
-#     print("Dev acc_qm: %s;\n  breakdown on (agg, sel, where): %s"%epoch_acc(
-#             model, BATCH_SIZE, val_sql_data, val_table_data, TEST_ENTRY))
-#     print("Dev execution acc: %s"%epoch_exec_acc(
-#             model, BATCH_SIZE, val_sql_data, val_table_data, DEV_DB))
-#     print("Test acc_qm: %s;\n  breakdown on (agg, sel, where): %s"%epoch_acc(
-#             model, BATCH_SIZE, test_sql_data, test_table_data, TEST_ENTRY))
     test_sql_data = user_input()
     print("Test execution acc: %s"%epoch_exec_acc_from_user(
             model, BATCH_SIZE, test_sql_data, test_table_data))
