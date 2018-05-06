@@ -8,9 +8,14 @@ import datetime
 
 import argparse
 
+class UserInputUtility(object):
+    def __init__(self):      
+        print('hi')
 
 def user_input():
     #user_input=raw_input()
+    print('hiiiiiiii')
+    return
     test_format= [{
             "question": 'What is the capital of Portugal',
             "query_tok": [""],
