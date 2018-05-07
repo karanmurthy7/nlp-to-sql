@@ -128,9 +128,8 @@ def to_batch_query(sql_data, idxes, st, ed):
         table_ids.append(sql_data[idxes[i]]['table_id'])
     return query_gt, table_ids
 
-def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data):
-#     engine = DBEngine(db_path)
-    
+def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data, db_path):
+    engine = DBEngine(db_path)
     print("\n\n",sql_data, len(sql_data))
     model.eval()
     perm = list(range(len(sql_data)))

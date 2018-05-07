@@ -1,16 +1,19 @@
 from slackclient import SlackClient
 import time, sys, html
 from database import Database
-import parse_user_input 
+from parse_user_input import UserInputUtility
+import os
 
 class SlackCommunication(object):
     API_KEY = ''
     def __init__(self):
+        print(os.getcwd())
         SlackCommunication.API_KEY = sys.argv[1]
         self.slack_client = SlackClient(SlackCommunication.API_KEY)
         self.appName = 'test-bot'
         self.db = Database()
-    
+        self.user_input_utility = UserInputUtility()
+        
     def slackConnection(self):
         return self.slack_client.rtm_connect()
     
@@ -40,9 +43,11 @@ class SlackCommunication(object):
                 
     def writeToSlack(self, channel, message):
         if message:
+            print('input from slack --------------->>>>', message)
             message = html.unescape(message)
-            sql_output = self.db.fetch_data(message)    
-            parse_user_input.user_input()
+            # sql_output = self.db.fetch_data(message)
+            sql_output = self.user_input_utility.fetch_response_from_model(self.user_input_utility.model) 
+            print('type of returned output---------> ', type(sql_output))  
             return self.slack_client.api_call('chat.postMessage', channel=channel, text=sql_output, as_user=True)
     
 
