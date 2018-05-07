@@ -61,6 +61,7 @@ class SQLNet(nn.Module):
 
     def generate_gt_where_seq(self, q, col, query):
         ret_seq = []
+        # print('q is -------->', q)
         for cur_q, cur_col, cur_query in zip(q, col, query):
             cur_values = []
             st = cur_query.index('WHERE')+1 if \

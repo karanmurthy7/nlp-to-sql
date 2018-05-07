@@ -19,6 +19,7 @@ class DBEngine:
         return self.execute(table_id, query.sel_index, query.agg_index, query.conditions, *args, **kwargs)
 
     def execute(self, table_id, select_index, aggregation_index, conditions, lower=True):
+        final_output=[]
         if not table_id.startswith('table'):
             table_id = 'table_{}'.format(table_id.replace('-', '_'))
         table_info = self.db.query('SELECT sql from sqlite_master WHERE tbl_name = :name', name=table_id).all()[0].sql.replace('\n','')
@@ -47,6 +48,15 @@ class DBEngine:
         if where_clause:
             where_str = 'WHERE ' + ' AND '.join(where_clause)
         query = 'SELECT {} AS result FROM {} {}'.format(select, table_id, where_str)
-        #print query
+        
+        print("\n\n\nQuery is", query)
+        print("\n\n\nWhere Map is", where_map)
         out = self.db.query(query, **where_map)
+#         return self.db.query("SELECT col5 AS result FROM table_1_10015132_16 WHERE col4 = '2003-06'", True)
+        
+#         print('output is -------> ', out)
+#         for o in out:
+#             final_output.append(o)
+#             print('Final Query Output \n',o)
+#         return final_output
         return [o.result for o in out]

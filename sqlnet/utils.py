@@ -142,6 +142,9 @@ def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data, db_path):
             to_batch_seq(sql_data, table_data, perm, st, ed, ret_vis_data=True)
         raw_q_seq = [x[0] for x in raw_data]
         raw_col_seq = [x[1] for x in raw_data]
+        print('q_seq ----- >', q_seq)
+        print('col_seq ----- >', col_seq)
+        print('query_seq ----- >', query_seq)
         gt_where_seq = model.generate_gt_where_seq(q_seq, col_seq, query_seq)
         query_gt, table_ids = to_batch_query(sql_data, perm, st, ed)
         gt_sel_seq = [x[1] for x in ans_seq]
@@ -150,25 +153,28 @@ def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data, db_path):
         pred_queries = model.gen_query(score, q_seq, col_seq,
                 raw_q_seq, raw_col_seq, (True, True, True))
                 
-        print(pred_queries)
+        # print(pred_queries)
         
         for idx, (sql_gt, sql_pred, tid) in enumerate(
                 zip(query_gt, pred_queries, table_ids)):
-            ret_gt = engine.execute(tid,
-                    sql_gt['sel'], sql_gt['agg'], sql_gt['conds'])
+#             ret_gt = engine.execute(tid,
+#                     sql_gt['sel'], sql_gt['agg'], sql_gt['conds'])
             try:
+                print("Inside try")
                 ret_pred = engine.execute(tid,
                         sql_pred['sel'], sql_pred['agg'], sql_pred['conds'])
-                #print('select prediction ---> ', sql_pred['sel'])
+                print("\n\n asdasdasd", ret_pred)
+                #return ret_pred
+               #print('select prediction ---> ', sql_pred['sel'])
                 #print('agg prediction ---> ', sql_pred['agg'])
                 #print('conds prediction ---> ', sql_pred['conds'])
             except:
                 ret_pred = None
-            tot_acc_num += (ret_gt == ret_pred)
+            #tot_acc_num += (ret_gt == ret_pred)
         
         st = ed
 
-    return tot_acc_num / len(sql_data)
+    return ret_pred
 
 def epoch_train(model, optimizer, batch_size, sql_data, table_data, pred_entry):
     model.train()

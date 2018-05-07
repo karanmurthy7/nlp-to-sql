@@ -47,7 +47,7 @@ class SlackCommunication(object):
             message = html.unescape(message)
             # sql_output = self.db.fetch_data(message)
             sql_output = self.user_input_utility.fetch_response_from_model(self.user_input_utility.model) 
-            print('type of returned output---------> ', type(sql_output))  
+            print('returned output---------> ', sql_output)  
             return self.slack_client.api_call('chat.postMessage', channel=channel, text=sql_output, as_user=True)
     
 

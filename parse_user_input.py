@@ -66,40 +66,43 @@ class UserInputUtility(object):
         
     def format_input(self, input):
         test_format = [{
-                "question": 'What is the capital of Portugal',
+                "question": "how many schools or teams had jalen rose",
                 "query_tok": [""],
-                "query_tok_space": None,
+                "query_tok_space": [" ", "", "", " ", "", " ", " ", " ", " ", " ", ""],
                 "table_id": "1-10015132-16",
-                "question_tok_space": [" ", " ", " ", " ", " ", ""],
+                "question_tok_space": [" ", " ", " ", " ", " ", " ", " ", ""],
                 "sql": {
                     "agg": 0,
                     "sel": 0,
-                    "conds": []
+                    "conds": [
+                        [0, 0, "Jalen Rose"]
+                    ]
                 },
                 "phase": 1,
-                "query": '',
-                "question_tok": None
+                "query": "",
+                "question_tok": ["how", "many", "schools", "or", "teams", "had", "jalen", "rose"]
             },
             {
-                "question": 'What is the capital of Portugal',
+                "question": "how many schools or teams had jalen rose",
                 "query_tok": [""],
-                "query_tok_space": None,
+                "query_tok_space": [" ", "", "", " ", "", " ", " ", " ", " ", " ", ""],
                 "table_id": "1-10015132-16",
-                "question_tok_space": [" ", " ", " ", " ", " ", ""],
+                "question_tok_space": [" ", " ", " ", " ", " ", " ", " ", ""],
                 "sql": {
-                    "agg": 0,
-                    "sel": 0,
-                    "conds": []
+                    "agg": 3,
+                    "sel": 5,
+                    "conds": [
+                        [0, 0, "Jalen Rose"]
+                    ]
                 },
                 "phase": 1,
-                "query": '',
-                "question_tok": None
+                "query": "",
+                "question_tok": ["how", "many", "schools", "or", "teams", "had", "jalen", "rose"]
             }]          
-        user_input = 'What is the capital of Portugal?'
-        input_list = user_input.split()
-        test_format[0]["question_tok"] = input_list
-        test_format[1]["question_tok"] = input_list
-        test_table_data = 'data/test_tok.tables.jsonl'
+#         user_input = 'What is the capital of Portugal?'
+#         input_list = user_input.split()
+#         test_format[0]["question_tok"] = input_list
+#         test_format[1]["question_tok"] = input_list
         return test_format
 
 
@@ -113,7 +116,7 @@ def user_input():
                 "question_tok_space": [" ", " ", " ", " ", " ", ""],
                 "sql": {
                     "agg": 0,
-                    "sel": 0,
+                    "sel": 2,
                     "conds": []
                 },
                 "phase": 1,
@@ -128,7 +131,7 @@ def user_input():
                 "question_tok_space": [" ", " ", " ", " ", " ", ""],
                 "sql": {
                     "agg": 0,
-                    "sel": 0,
+                    "sel": 2,
                     "conds": []
                 },
                 "phase": 1,
