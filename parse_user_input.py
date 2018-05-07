@@ -65,39 +65,44 @@ class UserInputUtility(object):
      
         
     def format_input(self, input):
+        input_question_tokens = input.split(" ")
+        input_question_space_tokens = [" "]*(len(input_question_tokens)-1) + [""]
+        test_format_obj = {}
+        test_format = []
+        
         test_format = [{
-                "question": "how many schools or teams had jalen rose",
+                "question": input,
                 "query_tok": [""],
-                "query_tok_space": [" ", "", "", " ", "", " ", " ", " ", " ", " ", ""],
+                "query_tok_space": [],
                 "table_id": "1-10015132-16",
-                "question_tok_space": [" ", " ", " ", " ", " ", " ", " ", ""],
+                "question_tok_space": input_question_space_tokens,
                 "sql": {
-                    "agg": 0,
-                    "sel": 0,
+                    "agg": None,
+                    "sel": None,
                     "conds": [
-                        [0, 0, "Jalen Rose"]
+                        [0, 0, 0]
                     ]
                 },
                 "phase": 1,
                 "query": "",
-                "question_tok": ["how", "many", "schools", "or", "teams", "had", "jalen", "rose"]
+                "question_tok": input_question_tokens
             },
             {
-                "question": "how many schools or teams had jalen rose",
+                "question": input,
                 "query_tok": [""],
-                "query_tok_space": [" ", "", "", " ", "", " ", " ", " ", " ", " ", ""],
+                "query_tok_space": [],
                 "table_id": "1-10015132-16",
-                "question_tok_space": [" ", " ", " ", " ", " ", " ", " ", ""],
+                "question_tok_space": input_question_space_tokens,
                 "sql": {
-                    "agg": 3,
-                    "sel": 5,
+                    "agg": None,
+                    "sel": None,
                     "conds": [
-                        [0, 0, "Jalen Rose"]
+                        [0, 0, 0]
                     ]
                 },
                 "phase": 1,
                 "query": "",
-                "question_tok": ["how", "many", "schools", "or", "teams", "had", "jalen", "rose"]
+                "question_tok": input_question_tokens
             }]          
 #         user_input = 'What is the capital of Portugal?'
 #         input_list = user_input.split()
