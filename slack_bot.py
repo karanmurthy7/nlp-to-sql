@@ -43,7 +43,7 @@ class SlackCommunication(object):
                 
     def writeToSlack(self, channel, message):
         if message:
-            
+            error_message = 'I did not understand it. Please try again.'
             message = html.unescape(message)
             print('input from slack --------------->>>>', message)
             print('input type from slack --------------->>>>', type(message))
@@ -52,10 +52,9 @@ class SlackCommunication(object):
             attachment = {'fields':[{}]}
             column_names = ["Player", "No.", "Nationality", "Position", \
                             "Years in Toronto", "School/Club Team"]
-            if output_dict['value'] == []:
-                # sql_output = 'I did not understand it. Please try again.'
-                sql_output = 'I did not understand it. Please try again.'
-                return self.slack_client.api_call('chat.postMessage', channel=channel, text = sql_output, as_user=True)
+            if output_dict['value'] == [] or len(message.split()) == 1:
+                # sql_output = 'I did not understand it. Please try again.
+                return self.slack_client.api_call('chat.postMessage', channel=channel, text = error_message, as_user=True)
             else:
                 value_str = ""
                 for output in output_dict['value']:
