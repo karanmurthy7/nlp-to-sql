@@ -130,7 +130,6 @@ def to_batch_query(sql_data, idxes, st, ed):
 
 def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data, db_path):
     engine = DBEngine(db_path)
-    print("\n\n",sql_data, len(sql_data))
     model.eval()
     perm = list(range(len(sql_data)))
     tot_acc_num = 0.0
@@ -160,10 +159,9 @@ def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data, db_path):
 #             ret_gt = engine.execute(tid,
 #                     sql_gt['sel'], sql_gt['agg'], sql_gt['conds'])
             try:
-                print("Inside try")
+                print("\n\n---->select index", sql_pred['sel'], "\n\n")
                 ret_pred = engine.execute(tid,
                         sql_pred['sel'], sql_pred['agg'], sql_pred['conds'])
-                print("\n\n asdasdasd", ret_pred)
                 #return ret_pred
                #print('select prediction ---> ', sql_pred['sel'])
                 #print('agg prediction ---> ', sql_pred['agg'])
@@ -173,8 +171,11 @@ def epoch_exec_acc_from_user(model, batch_size, sql_data, table_data, db_path):
             #tot_acc_num += (ret_gt == ret_pred)
         
         st = ed
-
-    return ret_pred
+    
+    predicted_dict = {}
+    predicted_dict['col_index'] = sql_pred['sel'] 
+    predicted_dict['value'] = ret_pred
+    return predicted_dict
 
 def epoch_train(model, optimizer, batch_size, sql_data, table_data, pred_entry):
     model.train()

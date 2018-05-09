@@ -10,7 +10,7 @@ class SlackCommunication(object):
         print(os.getcwd())
         SlackCommunication.API_KEY = sys.argv[1]
         self.slack_client = SlackClient(SlackCommunication.API_KEY)
-        self.appName = 'test-bot'
+        self.appName = 'data-bot'
         self.db = Database()
         self.user_input_utility = UserInputUtility()
         
@@ -48,9 +48,23 @@ class SlackCommunication(object):
             print('input from slack --------------->>>>', message)
             print('input type from slack --------------->>>>', type(message))
             # sql_output = self.db.fetch_data(message)
-            sql_output = self.user_input_utility.fetch_response_from_model(message) 
-            print('returned output---------> ', sql_output)  
-            return self.slack_client.api_call('chat.postMessage', channel=channel, text=sql_output, as_user=True)
+            output_dict = self.user_input_utility.fetch_response_from_model(message) 
+            attachment = {'fields':[{}]}
+            column_names = ["Player", "No.", "Nationality", "Position", \
+                            "Years in Toronto", "School/Club Team"]
+            if output_dict['value'] == []:
+                # sql_output = 'I did not understand it. Please try again.'
+                sql_output = 'I did not understand it. Please try again.'
+                return self.slack_client.api_call('chat.postMessage', channel=channel, text = sql_output, as_user=True)
+            else:
+                value_str = ""
+                for output in output_dict['value']:
+                    value_str += output + "\n"
+                    
+                attachment['fields'][0]['title'] = column_names[output_dict['col_index']]
+                attachment['fields'][0]['value'] = value_str
+                return self.slack_client.api_call('chat.postMessage', channel=channel, attachments=[attachment], as_user=True)  
+            
     
 
 class MainFunction(SlackCommunication):
